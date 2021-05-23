@@ -20,14 +20,20 @@
           <td class="p-2 border-r-2 text-center">
             {{ item.homeTeam.name }}
           </td>
-          <td class="p-2 border-r-2 text-center">
+          <td
+            class="p-2 border-r-2 text-center"
+            :class="winnerHighlight(item.score.winner, 'homeTeam')"
+          >
             {{ item.score.fullTime.homeTeam }}
           </td>
           <td class="p-2 border-r-2 text-center">
             <div>{{ getMatchDay(item.utcDate) }}</div>
             <div>{{ getMatchTime(item.utcDate) }}</div>
           </td>
-          <td class="p-2 border-r-2 text-center">
+          <td
+            class="p-2 border-r-2 text-center"
+            :class="winnerHighlight(item.score.winner, 'awayTeam')"
+          >
             {{ item.score.fullTime.awayTeam }}
           </td>
           <td class="p-2">{{ item.awayTeam.name }}</td>
@@ -45,31 +51,33 @@ import { onMounted, reactive, watchEffect } from "vue";
 
 export default {
   setup() {
+    const route = useRoute();
+
     const state = reactive({
       matches: "",
       matchDay: "",
       totalMatchDay: "",
     });
 
-    // const matchDay = ref("");
-
-    const route = useRoute();
-
     onMounted(() => {
       firstView();
       seachTotalMatchDay();
     });
 
-    //初期表示
-    const firstView = async () => {
-      await seachLastMatchDay();
-      const res = await axios
+    const getMatchData = () => {
+      return axios
         .get(
           `https://api.football-data.org/v2/competitions/${route.params.id}/matches?matchday=${state.matchDay}`
         )
         .catch((err) => {
           console.log(err);
         });
+    };
+
+    //初期表示
+    const firstView = async () => {
+      await seachLastMatchDay();
+      const res = await getMatchData();
 
       state.matches = res.data.matches;
     };
@@ -134,19 +142,21 @@ export default {
       state.totalMatchDay = totalMatchDay;
     };
 
+    const winnerHighlight = (win, team) => {
+      if (win === "HOME_TEAM" && team === "homeTeam") {
+        return "bg-blue-200";
+      } else if (win === "AWAY_TEAM" && team === "awayTeam") {
+        return "bg-blue-200";
+      }
+    };
+
     watchEffect(async () => {
-      const res = await axios
-        .get(
-          `https://api.football-data.org/v2/competitions/${route.params.id}/matches?matchday=${state.matchDay}`
-        )
-        .catch((err) => {
-          console.log(err);
-        });
+      const res = await getMatchData();
 
       state.matches = res.data.matches;
     });
 
-    return { state, getMatchDay, getMatchTime };
+    return { state, getMatchDay, getMatchTime, winnerHighlight };
   },
 };
 </script>
