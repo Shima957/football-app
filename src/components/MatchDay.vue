@@ -24,7 +24,8 @@
             {{ item.score.fullTime.homeTeam }}
           </td>
           <td class="p-2 border-r-2 text-center">
-            {{ getMatchDay(item.utcDate) }}
+            <div>{{ getMatchDay(item.utcDate) }}</div>
+            <div>{{ getMatchTime(item.utcDate) }}</div>
           </td>
           <td class="p-2 border-r-2 text-center">
             {{ item.score.fullTime.awayTeam }}
@@ -40,7 +41,7 @@
 import { useRoute } from "vue-router";
 
 import axios from "axios";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, watchEffect } from "vue";
 
 export default {
   setup() {
@@ -62,18 +63,26 @@ export default {
     //初期表示
     const firstView = async () => {
       await seachLastMatchDay();
-      const res = await axios.get(
-        `https://api.football-data.org/v2/competitions/${route.params.id}/matches?matchday=${state.matchDay}`
-      );
+      const res = await axios
+        .get(
+          `https://api.football-data.org/v2/competitions/${route.params.id}/matches?matchday=${state.matchDay}`
+        )
+        .catch((err) => {
+          console.log(err);
+        });
 
       state.matches = res.data.matches;
     };
 
     //何節まで終了しているか調べる
     const seachLastMatchDay = async () => {
-      const res = await axios.get(
-        `https://api.football-data.org/v2/competitions/${route.params.id}/matches`
-      );
+      const res = await axios
+        .get(
+          `https://api.football-data.org/v2/competitions/${route.params.id}/matches`
+        )
+        .catch((err) => {
+          console.log(err);
+        });
       const data = res.data.matches;
 
       const currentDate = new Date();
@@ -102,18 +111,42 @@ export default {
       return `${month}/${date}${day}`;
     };
 
+    const getMatchTime = (utcDate) => {
+      const jstDate = new Date(utcDate);
+      const time = `${jstDate.getHours()}:${("0" + jstDate.getMinutes()).slice(
+        -2
+      )}`;
+      return time;
+    };
+
     //全部で何節あるか調べる
     const seachTotalMatchDay = async () => {
       const route = useRoute();
-      const res = await axios.get(
-        `https://api.football-data.org/v2/competitions/${route.params.id}/standings?standingType=TOTAL`
-      );
+      const res = await axios
+        .get(
+          `https://api.football-data.org/v2/competitions/${route.params.id}/standings?standingType=TOTAL`
+        )
+        .catch((err) => {
+          console.log(err);
+        });
 
       const totalMatchDay = res.data.standings[0].table.length * 2 - 2;
       state.totalMatchDay = totalMatchDay;
     };
 
-    return { state, getMatchDay };
+    watchEffect(async () => {
+      const res = await axios
+        .get(
+          `https://api.football-data.org/v2/competitions/${route.params.id}/matches?matchday=${state.matchDay}`
+        )
+        .catch((err) => {
+          console.log(err);
+        });
+
+      state.matches = res.data.matches;
+    });
+
+    return { state, getMatchDay, getMatchTime };
   },
 };
 </script>
