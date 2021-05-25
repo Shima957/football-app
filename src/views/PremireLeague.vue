@@ -1,8 +1,8 @@
 <template>
   <div class="flex justify-around">
     <LeagueStandings />
-    <MatchDay />
-    <ScoreRank />
+    <MatchDay :teamUrl="teamUrl" />
+    <ScoreRank :teamUrl="teamUrl" />
   </div>
 </template>
 
@@ -14,5 +14,11 @@ import ScoreRank from "../components/ScoreRank";
 export default {
   name: "PremireLeauge",
   components: { LeagueStandings, MatchDay, ScoreRank },
+
+  setup() {
+    const teamUrl = "https://crests.football-data.org/";
+
+    return { teamUrl };
+  },
 };
 </script>

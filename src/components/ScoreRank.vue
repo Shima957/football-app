@@ -17,7 +17,13 @@
           <td class="p-2 text-center border-r-2">{{ index + 1 }}</td>
           <td class="p-2 border-r-2">
             <span>{{ item.player.name }}</span>
-            <div>{{ item.team.name }}</div>
+            <div class="flex items-center">
+              <img
+                :src="`${teamUrl}${item.team.id}.svg`"
+                class="w-5 h-5 mr-2"
+              />
+              <span>{{ item.team.name }}</span>
+            </div>
           </td>
           <td class="p-2 text-center">{{ item.numberOfGoals }}</td>
         </tr>
@@ -32,6 +38,8 @@ import axios from "axios";
 import { onMounted, reactive } from "vue";
 
 export default {
+  props: { teamUrl: String },
+
   setup() {
     const route = useRoute();
 

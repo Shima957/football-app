@@ -19,15 +19,22 @@
         <tr v-for="(item, index) in state.matches" :key="index" class="border">
           <!-- ホームチーム -->
           <td class="p-2 border-r-2 text-left">
-            {{ item.homeTeam.name }}
+            <div class="flex items-center">
+              <img
+                :src="`${teamUrl}${item.homeTeam.id}.svg`"
+                alt="logo"
+                class="w-5 h-5 mr-2"
+              />
+              <span>{{ item.homeTeam.name }}</span>
+            </div>
           </td>
           <td
-            class="p-2 border-r-2 text-center"
+            class="p-2 text-center"
             :class="winnerHighlight(item.score.winner, 'homeTeam')"
           >
             {{ item.score.fullTime.homeTeam }}
           </td>
-          <td class="p-2 border-r-2 text-center text-white bg-indigo-500">
+          <td class="p-2 text-center text-white bg-indigo-500">
             <div>{{ getMatchDay(item.utcDate) }}</div>
             <div>{{ getMatchTime(item.utcDate) }}</div>
           </td>
@@ -39,7 +46,16 @@
           >
             {{ item.score.fullTime.awayTeam }}
           </td>
-          <td class="p-2 text-left">{{ item.awayTeam.name }}</td>
+          <td class="p-2 text-left">
+            <div class="flex items-center">
+              <img
+                :src="`${teamUrl}${item.awayTeam.id}.svg`"
+                alt="logo"
+                class="w-5 h-5 mr-2"
+              />
+              <span>{{ item.awayTeam.name }}</span>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -58,6 +74,8 @@ import {
 } from "../modules/UseMatchDayComponent";
 
 export default {
+  props: { teamUrl: String },
+
   setup() {
     const state = reactive({
       matches: "",
