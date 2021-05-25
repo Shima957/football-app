@@ -10,14 +10,15 @@
         <tr>
           <th class="p-2 border-r-2">ホームチーム</th>
           <th class="p-2 border-r-2">得点</th>
-          <th class="p-2 border-r-2">日時</th>
+          <th class="p-2 border-r-2">キックオフ</th>
           <th class="p-2 border-r-2">得点</th>
           <th class="p-2">アウェイチーム</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in state.matches" :key="index" class="border">
-          <td class="p-2 border-r-2 text-center">
+          <!-- ホームチーム -->
+          <td class="p-2 border-r-2 text-left">
             {{ item.homeTeam.name }}
           </td>
           <td
@@ -26,17 +27,19 @@
           >
             {{ item.score.fullTime.homeTeam }}
           </td>
-          <td class="p-2 border-r-2 text-center">
+          <td class="p-2 border-r-2 text-center text-white bg-indigo-500">
             <div>{{ getMatchDay(item.utcDate) }}</div>
             <div>{{ getMatchTime(item.utcDate) }}</div>
           </td>
+
+          <!-- アウェイチーム -->
           <td
             class="p-2 border-r-2 text-center"
             :class="winnerHighlight(item.score.winner, 'awayTeam')"
           >
             {{ item.score.fullTime.awayTeam }}
           </td>
-          <td class="p-2">{{ item.awayTeam.name }}</td>
+          <td class="p-2 text-left">{{ item.awayTeam.name }}</td>
         </tr>
       </tbody>
     </table>
@@ -44,26 +47,40 @@
 </template>
 
 <script>
+import { onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
-
 import axios from "axios";
-import { onMounted, reactive, watchEffect } from "vue";
+
+import {
+  getMatchDay,
+  getMatchTime,
+  winnerHighlight,
+} from "../modules/UseMatchDayComponent";
 
 export default {
   setup() {
-    const route = useRoute();
-
     const state = reactive({
       matches: "",
       matchDay: "",
       totalMatchDay: "",
     });
 
+    const route = useRoute();
+
     onMounted(() => {
       firstView();
-      seachTotalMatchDay();
     });
 
+    //初期表示
+    const firstView = async () => {
+      await seachTotalMatchDay();
+      await seachLastMatchDay();
+      const res = await getMatchData();
+
+      state.matches = res.data.matches;
+    };
+
+    //試合データを取得
     const getMatchData = () => {
       return axios
         .get(
@@ -72,14 +89,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    };
-
-    //初期表示
-    const firstView = async () => {
-      await seachLastMatchDay();
-      const res = await getMatchData();
-
-      state.matches = res.data.matches;
     };
 
     //何節まで終了しているか調べる
@@ -91,40 +100,39 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+
       const data = res.data.matches;
 
-      const currentDate = new Date();
-
-      const findDate = data.find((param) => {
-        const date = new Date(param.utcDate);
-        return (
-          date.getUTCFullYear() === currentDate.getUTCFullYear() &&
-          date.getUTCMonth() === currentDate.getUTCMonth() &&
-          param.status === "SCHEDULED"
-        );
+      const noScheduled = data.some((param) => {
+        param.status === "SCHEDULED";
       });
 
-      const finishedMatchIndex = data.indexOf(findDate) - 1;
-      const finishedMatch = data[finishedMatchIndex].matchday;
-      state.matchDay = finishedMatch;
-    };
+      const noFinished = data.some((param) => {
+        param.status === "FINISHED";
+      });
 
-    //試合の日付を取得
-    const getMatchDay = (utcDate) => {
-      const jstDate = new Date(utcDate);
-      const month = jstDate.getMonth() + 1;
-      const date = jstDate.getDate();
-      const day = ["日", "月", "火", "水", "木", "金", "土"][jstDate.getDay()];
+      if (!noScheduled) {
+        //全日程が終了している場合
+        state.matchDay = state.totalMatchDay;
+      } else if (noScheduled && !noFinished) {
+        //シーズン開幕前
+        state.matchDay = 1;
+      } else {
+        //シーズン中
+        const findDate = data.find((param) => {
+          const date = new Date(param.utcDate);
+          const currentDate = new Date();
+          return (
+            date.getFullYear() === currentDate.getFullYear() &&
+            date.getMonth() === currentDate.getMonth() &&
+            param.status === "SCHDULED"
+          );
+        });
 
-      return `${month}/${date}${day}`;
-    };
-
-    const getMatchTime = (utcDate) => {
-      const jstDate = new Date(utcDate);
-      const time = `${jstDate.getHours()}:${("0" + jstDate.getMinutes()).slice(
-        -2
-      )}`;
-      return time;
+        const finishedMatchIndex = data.indexOf(findDate) - 1;
+        const finishedMatch = data[finishedMatchIndex].matchday;
+        state.matchDay = finishedMatch;
+      }
     };
 
     //全部で何節あるか調べる
@@ -142,21 +150,13 @@ export default {
       state.totalMatchDay = totalMatchDay;
     };
 
-    const winnerHighlight = (win, team) => {
-      if (win === "HOME_TEAM" && team === "homeTeam") {
-        return "bg-blue-200";
-      } else if (win === "AWAY_TEAM" && team === "awayTeam") {
-        return "bg-blue-200";
-      }
-    };
+    // watchEffect(async () => {
+    //   const res = await getMatchData();
 
-    watchEffect(async () => {
-      const res = await getMatchData();
+    //   state.matches = res.data.matches;
+    // });
 
-      state.matches = res.data.matches;
-    });
-
-    return { state, getMatchDay, getMatchTime, winnerHighlight };
+    return { state, getMatchTime, getMatchDay, winnerHighlight };
   },
 };
 </script>

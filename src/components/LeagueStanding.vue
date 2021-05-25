@@ -36,9 +36,13 @@ export default {
     });
 
     onMounted(async () => {
-      const res = await axios.get(
-        `https://api.football-data.org/v2/competitions/${route.params.id}/standings?standingType=TOTAL`
-      );
+      const res = await axios
+        .get(
+          `https://api.football-data.org/v2/competitions/${route.params.id}/standings?standingType=TOTAL`
+        )
+        .catch((err) => {
+          console.log(err);
+        });
       state.standing = res.data.standings[0].table;
     });
 
