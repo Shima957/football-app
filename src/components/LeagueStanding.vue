@@ -11,14 +11,25 @@
       </thead>
 
       <tbody>
-        <tr v-for="(item, index) in state.standing" :key="index" class="border">
-          <td class="p-2 border-r-2 text-center">{{ item.position }}</td>
+        <tr
+          v-for="(item, index) in state.standing"
+          :key="index"
+          class="border CL-range EL-range"
+          :class="demotedRange()"
+        >
+          <td class="p-2 border-r-2 text-center">
+            {{ item.position }}
+          </td>
           <td class="p-2 border-r-2 flex items-center">
             <img :src="item.team.crestUrl" alt="logo" class="w-5 h-5 mr-2" />
             <span>{{ item.team.name }}</span>
           </td>
-          <td class="p-2 border-r-2 text-center">{{ item.playedGames }}</td>
-          <td class="p-2 text-center">{{ item.points }}</td>
+          <td class="p-2 border-r-2 text-center">
+            {{ item.playedGames }}
+          </td>
+          <td class="p-2 text-center">
+            {{ item.points }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -51,7 +62,18 @@ export default {
       state.standing = res.data.standings[0].table;
     });
 
-    return { state };
+    const demotedRange = () => {
+      switch (route.params.id) {
+        case "PL":
+        case "PD":
+        case "SA":
+          return "demoted-range";
+        case "BL1":
+          return ["BL-demoted-range", "BL-demoted-playoff"];
+      }
+    };
+
+    return { state, demotedRange };
   },
 };
 </script>

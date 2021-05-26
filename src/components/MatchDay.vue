@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 
@@ -168,11 +168,11 @@ export default {
       state.totalMatchDay = totalMatchDay;
     };
 
-    // watchEffect(async () => {
-    //   const res = await getMatchData();
+    watchEffect(async () => {
+      const res = await getMatchData();
 
-    //   state.matches = res.data.matches;
-    // });
+      state.matches = res.data.matches;
+    });
 
     return { state, getMatchTime, getMatchDay, winnerHighlight };
   },

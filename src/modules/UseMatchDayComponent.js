@@ -17,6 +17,7 @@ const getMatchTime = (utcDate) => {
   return time;
 };
 
+//勝ったクラブのハイライト
 const winnerHighlight = (win, team) => {
   if (win === "HOME_TEAM" && team === "homeTeam") {
     return "bg-blue-200";

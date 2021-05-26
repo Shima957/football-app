@@ -1,7 +1,7 @@
 <template>
   <header class="bg-grdient p-4">
     <nav>
-      <ul class="flex justify-between text-white">
+      <ul class="flex justify-around text-white">
         <li>
           <router-link :to="{ name: 'PremireLeauge', params: { id: Premire } }"
             >Premire League</router-link

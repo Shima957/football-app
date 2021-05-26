@@ -7,4 +7,24 @@
     background: rgb(2,0,36);
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(116,0,255,1) 0%, rgba(158,81,255,1) 51%, rgba(0,212,255,1) 100%);
   }
+
+  .CL-range:nth-child(n+1):nth-child(-n+4) {
+    border-left: 2px solid #4285F4
+  }
+
+  .EL-range:nth-child(n+5):nth-child(-n+6) {
+    border-left: 2px solid #FA7B17
+  }
+
+  .demoted-range:nth-last-child(-n+3) {
+    border-left:2px solid #EA4335
+  }
+
+  .BL-demoted-range:nth-last-child(-n+2) {
+    border-left:2px solid #EA4335
+  }
+
+  .BL-demoted-playoff:nth-last-child(3) {
+    border-left: 2px solid #FBBC04
+  }
 }
