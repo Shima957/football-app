@@ -85,13 +85,12 @@ export default {
 
     const route = useRoute();
 
-    onMounted(() => {
+    onMounted(async () => {
       firstView();
     });
 
     //初期表示
     const firstView = async () => {
-      await seachTotalMatchDay();
       await seachLastMatchDay();
       const res = await getMatchData();
 
@@ -168,9 +167,11 @@ export default {
       state.totalMatchDay = totalMatchDay;
     };
 
+    //createdで呼ぶ
+    seachTotalMatchDay();
+
     watchEffect(async () => {
       const res = await getMatchData();
-
       state.matches = res.data.matches;
     });
 
