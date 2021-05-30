@@ -1,11 +1,11 @@
 <template>
-  <div class="mt-6 ml-6">
-    <select v-model="state.matchDay">
+  <div class="mt-6 matchday-min-max-w">
+    <select v-model="state.matchDay" class="border border-gray-300 rounded-md">
       <option v-for="n in state.totalMatchDay" :key="n" :value="n">
         {{ n }}節
       </option>
     </select>
-    <table class="border-2 rounded shadow-lg">
+    <table class="border-2 shadow-lg">
       <thead>
         <tr>
           <th class="p-2 border-r-2">ホームチーム</th>

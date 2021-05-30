@@ -27,4 +27,24 @@
   .BL-demoted-playoff:nth-last-child(3) {
     border-left: 2px solid #FBBC04
   }
+
+  .standing-min-max-w {
+    min-width: 300px;
+    max-width: 350px;
+  }
+
+  .matchday-min-max-w {
+    min-width: 300px;
+    max-width: 680px;
+  }
+
+  .scorerank-min-max-w {
+    min-width: 300px;
+    max-width: 293px;
+  }
+
+  .screen {
+    flex-direction: column;
+    align-items: center;
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-grdient p-4">
+  <header class="bg-grdient py-4">
     <nav>
       <ul class="flex justify-around text-white">
         <li>

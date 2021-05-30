@@ -1,5 +1,16 @@
 <template>
-  <div class="flex justify-around">
+  <div
+    class="
+      flex
+      justify-around
+      sm:flex-col
+      sm:items-center
+      md:flex-col
+      md:items-center
+      lg:flex-col
+      lg:items-center
+    "
+  >
     <LeagueStandings />
     <MatchDay :teamUrl="teamUrl" />
     <ScoreRank :teamUrl="teamUrl" />

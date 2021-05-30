@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6 ml-6">
+  <div class="mt-6 scorerank-min-max-w">
     <table class="border-2 rounded shadow-lg">
       <thead>
         <tr>
