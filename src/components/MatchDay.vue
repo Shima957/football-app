@@ -120,18 +120,18 @@ export default {
 
       const data = res.data.matches;
 
-      const noScheduled = data.some((param) => {
+      const preSeason = data.every((param) => {
         param.status === "SCHEDULED";
       });
 
-      const noFinished = data.some((param) => {
+      const endSeason = data.every((param) => {
         param.status === "FINISHED";
       });
 
-      if (!noScheduled) {
+      if (endSeason) {
         //全日程が終了している場合
         state.matchDay = state.totalMatchDay;
-      } else if (noScheduled && !noFinished) {
+      } else if (preSeason) {
         //シーズン開幕前
         state.matchDay = 1;
       } else {
@@ -142,9 +142,11 @@ export default {
           return (
             date.getFullYear() === currentDate.getFullYear() &&
             date.getMonth() === currentDate.getMonth() &&
-            param.status === "SCHDULED"
+            param.status === "SCHEDULED"
           );
         });
+
+        console.log(findDate);
 
         const finishedMatchIndex = data.indexOf(findDate) - 1;
         const finishedMatch = data[finishedMatchIndex].matchday;

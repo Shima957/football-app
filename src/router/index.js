@@ -1,31 +1,28 @@
 import { createRouter, createWebHistory } from "vue-router";
 import PremireLeague from "../views/PremireLeague.vue";
-import LaLiga from "../views/LaLiga.vue";
-import Bundesliga from "../views/Bundesliga.vue";
-import SerieA from "../views/SerieA.vue";
 
 const routes = [
   {
     path: "/:id",
-    name: "PremireLeauge",
+    name: "League",
     component: PremireLeague,
   },
   {
     path: "/:id",
-    name: "LaLiga",
-    component: LaLiga,
+    name: "League",
+    component: PremireLeague,
   },
 
   {
     path: "/:id",
-    name: "Bundesliga",
-    component: Bundesliga,
+    name: "League",
+    component: PremireLeague,
   },
 
   {
     path: "/:id",
-    name: "SerieA",
-    component: SerieA,
+    name: "League",
+    component: PremireLeague,
   },
 ];
 

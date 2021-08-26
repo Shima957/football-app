@@ -23,7 +23,7 @@ import MatchDay from "../components/MatchDay";
 import ScoreRank from "../components/ScoreRank";
 
 export default {
-  name: "PremireLeauge",
+  name: "Leageu",
   components: { LeagueStandings, MatchDay, ScoreRank },
 
   setup() {
