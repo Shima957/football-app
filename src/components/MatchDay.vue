@@ -140,13 +140,11 @@ export default {
           const date = new Date(param.utcDate);
           const currentDate = new Date();
           return (
-            date.getFullYear() === currentDate.getFullYear() &&
-            date.getMonth() === currentDate.getMonth() &&
+            date.getFullYear() >= currentDate.getFullYear() &&
+            date.getMonth() >= currentDate.getMonth() &&
             param.status === "SCHEDULED"
           );
         });
-
-        console.log(findDate);
 
         const finishedMatchIndex = data.indexOf(findDate) - 1;
         const finishedMatch = data[finishedMatchIndex].matchday;
