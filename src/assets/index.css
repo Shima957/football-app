@@ -47,4 +47,19 @@
     flex-direction: column;
     align-items: center;
   }
+
+  .standing-wh {
+    width: 389px;
+    height: 860px;
+  }
+  
+  .matchday-wh {
+    width: 643px;
+    height: 719px;
+  }
+
+  .scorerank-wh {
+    width:300px;
+    height:742px;
+  }
 }

@@ -1,6 +1,8 @@
 <template>
   <div class="mt-6 standing-min-w">
-    <table class="border-2 rounded shadow-lg">
+    <loading v-if="state.loading" class="standing-wh"></loading>
+    <error v-if="state.error" class="standing-wh"></error>
+    <table class="border-2 rounded shadow-lg" v-if="state.show">
       <thead>
         <tr>
           <th class="p-2 border-r-2">#</th>
@@ -41,25 +43,35 @@ import { useRoute } from "vue-router";
 import axios from "axios";
 import { onMounted, reactive } from "vue";
 
+import Loading from "./Loading.vue";
+import Error from "./Error.vue";
+
 export default {
   props: { teamUrl: String },
+  components: { Loading, Error },
 
   setup() {
     const route = useRoute();
 
     const state = reactive({
-      standing: "",
+      standing: [],
+      show: false,
+      loading: true,
+      error: false,
     });
 
     onMounted(async () => {
-      const res = await axios
-        .get(
+      try {
+        const res = await axios.get(
           `https://api.football-data.org/v2/competitions/${route.params.id}/standings?standingType=TOTAL`
-        )
-        .catch((err) => {
-          console.log(err);
-        });
-      state.standing = res.data.standings[0].table;
+        );
+        state.standing.push(...res.data.standings[0].table);
+        state.loading = false;
+        state.show = true;
+      } catch (e) {
+        state.loading = false;
+        state.error = true;
+      }
     });
 
     const demotedRange = () => {

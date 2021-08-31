@@ -1,6 +1,9 @@
 <template>
   <div class="mt-6 scorerank-min-max-w">
-    <table class="border-2 rounded shadow-lg">
+    <loading v-if="state.loading" class="scorerank-wh"></loading>
+    <error v-if="state.error" class="scorerank-wh"></error>
+
+    <table class="border-2 rounded shadow-lg" v-if="state.show">
       <thead>
         <tr>
           <th class="p-2 border-r-2">#</th>
@@ -37,14 +40,21 @@ import { useRoute } from "vue-router";
 import axios from "axios";
 import { onMounted, reactive } from "vue";
 
+import Loading from "./Loading.vue";
+import Error from "./Error.vue";
+
 export default {
   props: { teamUrl: String },
+  components: { Loading, Error },
 
   setup() {
     const route = useRoute();
 
     const state = reactive({
-      scoreRank: "",
+      scoreRank: [],
+      loading: true,
+      error: false,
+      show: false,
     });
 
     onMounted(() => {
@@ -52,15 +62,17 @@ export default {
     });
 
     const getData = async () => {
-      const res = await axios
-        .get(
+      try {
+        const res = await axios.get(
           `https://api.football-data.org/v2/competitions/${route.params.id}/scorers`
-        )
-        .catch((err) => {
-          console.log(err);
-        });
-
-      state.scoreRank = res.data.scorers;
+        );
+        state.scoreRank.push(...res.data.scorers);
+        state.loading = false;
+        state.show = true;
+      } catch (e) {
+        state.loading = false;
+        state.error = true;
+      }
     };
 
     return { state };

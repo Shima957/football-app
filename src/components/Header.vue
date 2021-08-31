@@ -3,25 +3,25 @@
     <nav>
       <ul class="flex justify-around text-white">
         <li>
-          <router-link :to="{ name: 'League', params: { id: Premire } }"
+          <router-link :to="{ name: 'PremireLeague', params: { id: Premire } }"
             >Premire League</router-link
           >
         </li>
 
         <li>
-          <router-link :to="{ name: 'League', params: { id: LaLiga } }"
+          <router-link :to="{ name: 'LaLiga', params: { id: LaLiga } }"
             >La Liga</router-link
           >
         </li>
 
         <li>
-          <router-link :to="{ name: 'League', params: { id: Bundesliga } }"
+          <router-link :to="{ name: 'Bundesliga', params: { id: Bundesliga } }"
             >Bundesliga</router-link
           >
         </li>
 
         <li>
-          <router-link :to="{ name: 'League', params: { id: SerieA } }"
+          <router-link :to="{ name: 'SerieA', params: { id: SerieA } }"
             >Serie A</router-link
           >
         </li>
