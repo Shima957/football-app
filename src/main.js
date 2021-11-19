@@ -8,17 +8,17 @@ import firebase from "firebase/app";
 createApp(App).use(router).mount("#app");
 
 axios.defaults.headers = {
-  "X-Auth-Token": "ecb58d1f4108435c960799e3696e8e8b",
+  "X-Auth-Token": process.env.VUE_APP_AIP_KEY,
 };
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDWuDMfZuaEYNVhFuM_e6scvKzS6vw5y-4",
-  authDomain: "football-app-b0a1d.firebaseapp.com",
-  projectId: "football-app-b0a1d",
-  storageBucket: "football-app-b0a1d.appspot.com",
-  messagingSenderId: "848410910974",
-  appId: "1:848410910974:web:27e6cfff37a49943ad85af",
-  measurementId: "G-8B4BYQZJY3",
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
